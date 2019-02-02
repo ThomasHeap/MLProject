@@ -1,0 +1,12 @@
+bash: SBATCH: command not found
+Namespace(batchSize=64, beta1=0.5, cuda=True, dataroot='/home/s1832582/zappos-shoes/zappos-dataset', dataset='folder', imageSize=136, lr=0.0002, manualSeed=None, ndf=64, netD='', netG='', ngf=64, ngpu=1, niter=25, nz=100, outf='/home/s1832582/', workers=2)
+Random Seed:  7728
+Traceback (most recent call last):
+  File "dcgan.py", line 61, in <module>
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torchvision/datasets/folder.py", line 178, in __init__
+    target_transform=target_transform)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torchvision/datasets/folder.py", line 79, in __init__
+    "Supported extensions are: " + ",".join(extensions)))
+RuntimeError: Found 0 files in subfolders of: /home/s1832582/zappos-shoes/zappos-dataset
+Supported extensions are: .jpg,.jpeg,.png,.ppm,.bmp,.pgm,.tif
