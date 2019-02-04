@@ -1,6 +1,7 @@
 from __future__ import print_function
 import argparse
 import os
+import sys
 import random
 import torch
 import torch.nn as nn
@@ -11,6 +12,11 @@ import torch.utils.data
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
+
+#trying this
+from PIL import ImageFile, Image
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+Image.MAX_IMAGE_PIXELS = sys.maxsize
 
 
 parser = argparse.ArgumentParser()

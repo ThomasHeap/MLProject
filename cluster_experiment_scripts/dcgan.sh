@@ -34,4 +34,4 @@ export DATASET_DIR=${TMP}/datasets/
 
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
-python dcgan.py --dataset folder --dataroot ~/zappos-shoes --cuda
+python dcgan.py --dataset folder --dataroot ~/paintings --cuda --outf ~/paintings_dcgan
