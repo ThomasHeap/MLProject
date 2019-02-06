@@ -12,6 +12,7 @@ import torch.utils.data
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
+import torch.multiprocessing as mp
 
 #trying this
 from PIL import ImageFile, Image
