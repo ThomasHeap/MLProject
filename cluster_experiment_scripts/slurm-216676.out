@@ -1,0 +1,155 @@
+bash: SBATCH: command not found
+Namespace(batchSize=64, beta1=0.5, cuda=True, dataroot='/home/s1832582/paintings', dataset='folder', imageSize=64, lr=0.0002, manualSeed=None, ndf=64, netD='', netG='', ngf=64, ngpu=1, niter=25, nz=100, outf='/home/s1832582/paintings_dcgan', workers=2)
+Random Seed:  163
+Generator(
+  (main): Sequential(
+    (0): ConvTranspose2d(100, 512, kernel_size=(4, 4), stride=(1, 1), bias=False)
+    (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace)
+    (3): ConvTranspose2d(512, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU(inplace)
+    (6): ConvTranspose2d(256, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (7): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU(inplace)
+    (9): ConvTranspose2d(128, 64, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (10): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (11): ReLU(inplace)
+    (12): ConvTranspose2d(64, 3, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (13): Tanh()
+  )
+)
+Discriminator(
+  (main): Sequential(
+    (0): Conv2d(3, 64, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (1): LeakyReLU(negative_slope=0.2, inplace)
+    (2): Conv2d(64, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (3): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (4): LeakyReLU(negative_slope=0.2, inplace)
+    (5): Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (6): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (7): LeakyReLU(negative_slope=0.2, inplace)
+    (8): Conv2d(256, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (9): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): LeakyReLU(negative_slope=0.2, inplace)
+    (11): Conv2d(512, 1, kernel_size=(4, 4), stride=(1, 1), bias=False)
+    (12): Sigmoid()
+  )
+)
+[0/25][0/1242] Loss_D: 2.3442 Loss_G: 4.0764 D(x): 0.2724 D(G(z)): 0.4372 / 0.0245
+[0/25][1/1242] Loss_D: 1.3008 Loss_G: 6.1152 D(x): 0.7671 D(G(z)): 0.5490 / 0.0032
+[0/25][2/1242] Loss_D: 0.7841 Loss_G: 6.2830 D(x): 0.7781 D(G(z)): 0.3329 / 0.0028
+[0/25][3/1242] Loss_D: 0.8604 Loss_G: 6.1872 D(x): 0.7541 D(G(z)): 0.3334 / 0.0031
+[0/25][4/1242] Loss_D: 1.3204 Loss_G: 6.7123 D(x): 0.6655 D(G(z)): 0.4419 / 0.0020
+[0/25][5/1242] Loss_D: 0.7473 Loss_G: 7.2156 D(x): 0.7684 D(G(z)): 0.2767 / 0.0011
+[0/25][6/1242] Loss_D: 0.7754 Loss_G: 6.7160 D(x): 0.7346 D(G(z)): 0.2139 / 0.0017
+[0/25][7/1242] Loss_D: 0.8077 Loss_G: 8.7893 D(x): 0.8020 D(G(z)): 0.3765 / 0.0003
+[0/25][8/1242] Loss_D: 0.8045 Loss_G: 8.0953 D(x): 0.7467 D(G(z)): 0.2221 / 0.0005
+[0/25][9/1242] Loss_D: 0.7222 Loss_G: 9.6710 D(x): 0.8461 D(G(z)): 0.3201 / 0.0001
+[0/25][10/1242] Loss_D: 0.6028 Loss_G: 7.4847 D(x): 0.7234 D(G(z)): 0.1095 / 0.0008
+[0/25][11/1242] Loss_D: 1.0070 Loss_G: 11.8556 D(x): 0.8458 D(G(z)): 0.4867 / 0.0000
+[0/25][12/1242] Loss_D: 0.4694 Loss_G: 8.7718 D(x): 0.7548 D(G(z)): 0.0250 / 0.0004
+[0/25][13/1242] Loss_D: 0.8539 Loss_G: 12.0277 D(x): 0.8989 D(G(z)): 0.4691 / 0.0000
+[0/25][14/1242] Loss_D: 0.3574 Loss_G: 9.0520 D(x): 0.7853 D(G(z)): 0.0434 / 0.0002
+[0/25][15/1242] Loss_D: 0.7796 Loss_G: 11.7752 D(x): 0.8246 D(G(z)): 0.3629 / 0.0000
+[0/25][16/1242] Loss_D: 0.5724 Loss_G: 8.4827 D(x): 0.6920 D(G(z)): 0.0519 / 0.0003
+[0/25][17/1242] Loss_D: 1.6753 Loss_G: 16.5881 D(x): 0.8503 D(G(z)): 0.6933 / 0.0000
+[0/25][18/1242] Loss_D: 0.2238 Loss_G: 15.2094 D(x): 0.8488 D(G(z)): 0.0006 / 0.0000
+[0/25][19/1242] Loss_D: 0.1288 Loss_G: 8.1282 D(x): 0.8996 D(G(z)): 0.0067 / 0.0005
+[0/25][20/1242] Loss_D: 2.2409 Loss_G: 17.7846 D(x): 0.9335 D(G(z)): 0.8293 / 0.0000
+[0/25][21/1242] Loss_D: 0.4810 Loss_G: 17.6789 D(x): 0.7062 D(G(z)): 0.0001 / 0.0000
+[0/25][22/1242] Loss_D: 0.4370 Loss_G: 11.0153 D(x): 0.7363 D(G(z)): 0.0002 / 0.0000
+[0/25][23/1242] Loss_D: 0.6531 Loss_G: 12.2527 D(x): 0.9443 D(G(z)): 0.3923 / 0.0000
+[0/25][24/1242] Loss_D: 0.3342 Loss_G: 10.7967 D(x): 0.8307 D(G(z)): 0.0998 / 0.0000
+[0/25][25/1242] Loss_D: 0.6298 Loss_G: 15.5956 D(x): 0.9042 D(G(z)): 0.3641 / 0.0000
+[0/25][26/1242] Loss_D: 0.4702 Loss_G: 12.0227 D(x): 0.7504 D(G(z)): 0.0051 / 0.0000
+[0/25][27/1242] Loss_D: 0.6338 Loss_G: 15.5301 D(x): 0.8836 D(G(z)): 0.3435 / 0.0000
+[0/25][28/1242] Loss_D: 0.2499 Loss_G: 12.6885 D(x): 0.8119 D(G(z)): 0.0023 / 0.0000
+[0/25][29/1242] Loss_D: 0.1628 Loss_G: 7.9602 D(x): 0.9015 D(G(z)): 0.0476 / 0.0006
+[0/25][30/1242] Loss_D: 1.9657 Loss_G: 23.1311 D(x): 0.9270 D(G(z)): 0.8003 / 0.0000
+[0/25][31/1242] Loss_D: 0.3694 Loss_G: 24.9382 D(x): 0.7670 D(G(z)): 0.0000 / 0.0000
+[0/25][32/1242] Loss_D: 0.2363 Loss_G: 20.2764 D(x): 0.8243 D(G(z)): 0.0000 / 0.0000
+[0/25][33/1242] Loss_D: 0.1855 Loss_G: 9.4406 D(x): 0.8576 D(G(z)): 0.0002 / 0.0001
+[0/25][34/1242] Loss_D: 3.0015 Loss_G: 21.3184 D(x): 0.9853 D(G(z)): 0.9267 / 0.0000
+[0/25][35/1242] Loss_D: 0.1368 Loss_G: 23.4092 D(x): 0.8817 D(G(z)): 0.0000 / 0.0000
+[0/25][36/1242] Loss_D: 0.3178 Loss_G: 19.5025 D(x): 0.7681 D(G(z)): 0.0000 / 0.0000
+[0/25][37/1242] Loss_D: 0.0803 Loss_G: 12.0082 D(x): 0.9279 D(G(z)): 0.0001 / 0.0000
+[0/25][38/1242] Loss_D: 0.2843 Loss_G: 4.9085 D(x): 0.8472 D(G(z)): 0.0476 / 0.0106
+[0/25][39/1242] Loss_D: 2.8113 Loss_G: 21.4135 D(x): 0.9122 D(G(z)): 0.9059 / 0.0000
+[0/25][40/1242] Loss_D: 0.2395 Loss_G: 25.1918 D(x): 0.8396 D(G(z)): 0.0000 / 0.0000
+[0/25][41/1242] Loss_D: 0.3139 Loss_G: 23.8759 D(x): 0.7744 D(G(z)): 0.0000 / 0.0000
+[0/25][42/1242] Loss_D: 0.4435 Loss_G: 19.3207 D(x): 0.7982 D(G(z)): 0.0000 / 0.0000
+[0/25][43/1242] Loss_D: 0.1457 Loss_G: 11.2154 D(x): 0.8833 D(G(z)): 0.0000 / 0.0000
+[0/25][44/1242] Loss_D: 0.0770 Loss_G: 4.6221 D(x): 0.9752 D(G(z)): 0.0469 / 0.0165
+[0/25][45/1242] Loss_D: 2.4749 Loss_G: 19.9509 D(x): 0.9924 D(G(z)): 0.8900 / 0.0000
+[0/25][46/1242] Loss_D: 0.2772 Loss_G: 23.2572 D(x): 0.8061 D(G(z)): 0.0000 / 0.0000
+[0/25][47/1242] Loss_D: 0.2465 Loss_G: 21.3189 D(x): 0.8379 D(G(z)): 0.0000 / 0.0000
+[0/25][48/1242] Loss_D: 0.1488 Loss_G: 14.7582 D(x): 0.9006 D(G(z)): 0.0000 / 0.0000
+[0/25][49/1242] Loss_D: 0.1299 Loss_G: 6.5062 D(x): 0.9189 D(G(z)): 0.0086 / 0.0057
+[0/25][50/1242] Loss_D: 1.8008 Loss_G: 17.7983 D(x): 0.9415 D(G(z)): 0.7735 / 0.0000
+[0/25][51/1242] Loss_D: 0.1571 Loss_G: 20.0804 D(x): 0.8894 D(G(z)): 0.0000 / 0.0000
+[0/25][52/1242] Loss_D: 0.5605 Loss_G: 16.2684 D(x): 0.6450 D(G(z)): 0.0000 / 0.0000
+[0/25][53/1242] Loss_D: 0.0794 Loss_G: 8.7446 D(x): 0.9282 D(G(z)): 0.0009 / 0.0005
+[0/25][54/1242] Loss_D: 0.3836 Loss_G: 8.2681 D(x): 0.9105 D(G(z)): 0.2266 / 0.0004
+[0/25][55/1242] Loss_D: 0.2494 Loss_G: 10.0263 D(x): 0.9392 D(G(z)): 0.1429 / 0.0001
+[0/25][56/1242] Loss_D: 0.1178 Loss_G: 8.2094 D(x): 0.9238 D(G(z)): 0.0262 / 0.0005
+[0/25][57/1242] Loss_D: 0.1974 Loss_G: 7.3867 D(x): 0.9280 D(G(z)): 0.1007 / 0.0011
+[0/25][58/1242] Loss_D: 0.2300 Loss_G: 8.8573 D(x): 0.9571 D(G(z)): 0.1526 / 0.0003
+[0/25][59/1242] Loss_D: 0.2608 Loss_G: 7.1533 D(x): 0.8605 D(G(z)): 0.0357 / 0.0015
+[0/25][60/1242] Loss_D: 0.4767 Loss_G: 9.9647 D(x): 0.9069 D(G(z)): 0.2547 / 0.0001
+[0/25][61/1242] Loss_D: 0.1718 Loss_G: 8.5384 D(x): 0.8902 D(G(z)): 0.0145 / 0.0006
+[0/25][62/1242] Loss_D: 0.2898 Loss_G: 6.0896 D(x): 0.8685 D(G(z)): 0.0489 / 0.0039
+[0/25][63/1242] Loss_D: 0.9352 Loss_G: 13.6572 D(x): 0.9063 D(G(z)): 0.4894 / 0.0000
+[0/25][64/1242] Loss_D: 0.5895 Loss_G: 12.8205 D(x): 0.7151 D(G(z)): 0.0002 / 0.0001
+[0/25][65/1242] Loss_D: 0.3472 Loss_G: 6.6243 D(x): 0.7640 D(G(z)): 0.0060 / 0.0057
+[0/25][66/1242] Loss_D: 0.6853 Loss_G: 8.2572 D(x): 0.9210 D(G(z)): 0.3778 / 0.0004
+[0/25][67/1242] Loss_D: 0.1975 Loss_G: 8.9680 D(x): 0.9539 D(G(z)): 0.1237 / 0.0003
+[0/25][68/1242] Loss_D: 0.5692 Loss_G: 4.5861 D(x): 0.6973 D(G(z)): 0.0306 / 0.0481
+[0/25][69/1242] Loss_D: 0.9711 Loss_G: 10.1243 D(x): 0.9199 D(G(z)): 0.4907 / 0.0001
+[0/25][70/1242] Loss_D: 0.5657 Loss_G: 7.8577 D(x): 0.6751 D(G(z)): 0.0030 / 0.0007
+[0/25][71/1242] Loss_D: 0.3112 Loss_G: 4.6993 D(x): 0.8391 D(G(z)): 0.0704 / 0.0153
+[0/25][72/1242] Loss_D: 1.2264 Loss_G: 11.1832 D(x): 0.9164 D(G(z)): 0.5803 / 0.0001
+[0/25][73/1242] Loss_D: 1.1000 Loss_G: 7.4666 D(x): 0.5315 D(G(z)): 0.0049 / 0.0034
+[0/25][74/1242] Loss_D: 0.7076 Loss_G: 3.5532 D(x): 0.6820 D(G(z)): 0.1042 / 0.0440
+[0/25][75/1242] Loss_D: 1.4198 Loss_G: 10.0384 D(x): 0.9226 D(G(z)): 0.6582 / 0.0002
+[0/25][76/1242] Loss_D: 1.3827 Loss_G: 7.2794 D(x): 0.4350 D(G(z)): 0.0030 / 0.0059
+[0/25][77/1242] Loss_D: 0.2737 Loss_G: 4.6958 D(x): 0.9225 D(G(z)): 0.1025 / 0.0395
+[0/25][78/1242] Loss_D: 0.5901 Loss_G: 5.2203 D(x): 0.9165 D(G(z)): 0.3196 / 0.0102
+[0/25][79/1242] Loss_D: 0.4952 Loss_G: 4.9323 D(x): 0.7979 D(G(z)): 0.1500 / 0.0112
+[0/25][80/1242] Loss_D: 0.4031 Loss_G: 5.1435 D(x): 0.8574 D(G(z)): 0.1924 / 0.0111
+[0/25][81/1242] Loss_D: 0.5354 Loss_G: 5.0181 D(x): 0.7710 D(G(z)): 0.1719 / 0.0135
+[0/25][82/1242] Loss_D: 0.4398 Loss_G: 6.2247 D(x): 0.8488 D(G(z)): 0.2041 / 0.0039
+[0/25][83/1242] Loss_D: 0.4218 Loss_G: 4.2268 D(x): 0.7723 D(G(z)): 0.0975 / 0.0221
+[0/25][84/1242] Loss_D: 0.5458 Loss_G: 7.9557 D(x): 0.8755 D(G(z)): 0.2979 / 0.0006
+[0/25][85/1242] Loss_D: 1.2760 Loss_G: 0.8550 D(x): 0.4132 D(G(z)): 0.0225 / 0.5040
+[0/25][86/1242] Loss_D: 2.2844 Loss_G: 10.9194 D(x): 0.9689 D(G(z)): 0.8491 / 0.0002
+[0/25][87/1242] Loss_D: 1.4776 Loss_G: 8.0961 D(x): 0.4374 D(G(z)): 0.0021 / 0.0009
+[0/25][88/1242] Loss_D: 0.9803 Loss_G: 2.8423 D(x): 0.5285 D(G(z)): 0.0166 / 0.1241
+[0/25][89/1242] Loss_D: 1.0697 Loss_G: 4.7275 D(x): 0.9702 D(G(z)): 0.5843 / 0.0198
+[0/25][90/1242] Loss_D: 0.4506 Loss_G: 5.6356 D(x): 0.8660 D(G(z)): 0.1999 / 0.0073
+Traceback (most recent call last):
+  File "dcgan.py", line 213, in <module>
+    for i, data in enumerate(dataloader, 0):
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 637, in __next__
+    return self._process_next_batch(batch)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 658, in _process_next_batch
+    raise batch.exc_type(batch.exc_msg)
+PIL.Image.DecompressionBombError: Traceback (most recent call last):
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 138, in _worker_loop
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 138, in <listcomp>
+    samples = collate_fn([dataset[i] for i in batch_indices])
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torchvision/datasets/folder.py", line 101, in __getitem__
+    sample = self.loader(path)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torchvision/datasets/folder.py", line 147, in default_loader
+    return pil_loader(path)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/torchvision/datasets/folder.py", line 129, in pil_loader
+    img = Image.open(f)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/PIL/Image.py", line 2672, in open
+    im = _open_core(fp, filename, prefix)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/PIL/Image.py", line 2659, in _open_core
+    _decompression_bomb_check(im.size)
+  File "/home/s1832582/miniconda3/envs/mlp/lib/python3.7/site-packages/PIL/Image.py", line 2593, in _decompression_bomb_check
+    (pixels, 2 * MAX_IMAGE_PIXELS))
+PIL.Image.DecompressionBombError: Image size (680730000 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack.
+
