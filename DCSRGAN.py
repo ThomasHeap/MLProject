@@ -203,8 +203,7 @@ if opt.netD != '':
     netD.load_state_dict(torch.load(opt.netD))
 print(netD)
 
-criterion = nn.BCELoss()
-
+BCE_stable = nn.BCEWithLogitsLoss()
 fixed_noise = torch.randn(opt.batchSize, nz, 1, 1, device=device)
 real_label = 1
 fake_label = 0
@@ -214,7 +213,7 @@ optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 
 #####################################
-Changed to use Rel standard rules
+#Changed to use Rel standard rules
 #####################################
 
 for epoch in range(opt.niter):
@@ -229,7 +228,7 @@ for epoch in range(opt.niter):
         label = torch.full((batch_size,), real_label, device=device)
         output_real = netD(real_cpu)
 
-        D_x = output.mean().item()
+        D_x = output_real.mean().item()
 
         # train with fake
         noise = torch.randn(batch_size, nz, 1, 1, device=device)
@@ -239,7 +238,7 @@ for epoch in range(opt.niter):
         errD = BCE_stable(output_real - output_fake, label)
         errD.backward()
         
-        D_G_z1 = output.mean().item()
+        D_G_z1 = output_fake.mean().item()
 
         optimizerD.step()
 
@@ -248,13 +247,13 @@ for epoch in range(opt.niter):
         ###########################
         netG.zero_grad()
         label.fill_(real_label)  # fake labels are real for generator cost
-        output_real = netD(fake)
-        output_fake = netD(real)
+        output_fake = netD(fake)
+        output_real = netD(real_cpu)
           
         errG = BCE_stable(output_fake - output_real, label)
         errG.backward()
 
-        D_G_z2 = output.mean().item()
+        D_G_z2 = output_fake.mean().item()
         optimizerG.step()
 
         print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f D(x): %.4f D(G(z)): %.4f / %.4f'
