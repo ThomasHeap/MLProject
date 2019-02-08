@@ -144,7 +144,6 @@ class Generator(nn.Module):
             nn.ReLU(True),
             # state size. (ngf) x 32 x 32
             nn.ConvTranspose2d(    ngf,      nc, 4, 2, 1, bias=False),
-            nn.Tanh()
             # state size. (nc) x 64 x 64
         )
 
@@ -228,14 +227,14 @@ for epoch in range(opt.niter):
         y = torch.full((batch_size,), real_label, device=device)
         y_pred = netD(real_cpu)
 
-        D_x = output_real.mean().item()
+        D_x = y_pred.mean().item()
 
         # train with fake
         noise = torch.randn(batch_size, nz, 1, 1, device=device)
         fake = netG(noise)
         y_pred_fake = netD(fake.detach())
         
-        errD = BCE_stable(y_pred - y_pred_fak, y)
+        errD = BCE_stable(y_pred - y_pred_fake, y)
         errD.backward()
         
         D_G_z1 = y_pred_fake.mean().item()
@@ -250,7 +249,7 @@ for epoch in range(opt.niter):
         y_pred_fake = netD(fake)
         y_pred = netD(real_cpu)
           
-        errG = BCE_stable(y_pred_fake_fake - y_pred, y)
+        errG = BCE_stable(y_pred_fake - y_pred, y)
         errG.backward()
 
         D_G_z2 = y_pred_fake.mean().item()
