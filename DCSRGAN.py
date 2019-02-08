@@ -225,20 +225,20 @@ for epoch in range(opt.niter):
         netD.zero_grad()
         real_cpu = data[0].to(device)
         batch_size = real_cpu.size(0)
-        label = torch.full((batch_size,), real_label, device=device)
-        output_real = netD(real_cpu)
+        y = torch.full((batch_size,), real_label, device=device)
+        y_pred = netD(real_cpu)
 
         D_x = output_real.mean().item()
 
         # train with fake
         noise = torch.randn(batch_size, nz, 1, 1, device=device)
         fake = netG(noise)
-        output_fake = netD(fake.detach())
+        y_pred_fake = netD(fake.detach())
         
-        errD = BCE_stable(output_real - output_fake, label)
+        errD = BCE_stable(y_pred - y_pred_fak, y)
         errD.backward()
         
-        D_G_z1 = output_fake.mean().item()
+        D_G_z1 = y_pred_fake.mean().item()
 
         optimizerD.step()
 
@@ -246,14 +246,14 @@ for epoch in range(opt.niter):
         # (2) Update G network: maximize log(D(G(z)))
         ###########################
         netG.zero_grad()
-        label.fill_(real_label)  # fake labels are real for generator cost
-        output_fake = netD(fake)
-        output_real = netD(real_cpu)
+        y.fill_(real_label)  # fake labels are real for generator cost
+        y_pred_fake = netD(fake)
+        y_pred = netD(real_cpu)
           
-        errG = BCE_stable(output_fake - output_real, label)
+        errG = BCE_stable(y_pred_fake_fake - y_pred, y)
         errG.backward()
 
-        D_G_z2 = output_fake.mean().item()
+        D_G_z2 = y_pred_fake.mean().item()
         optimizerG.step()
 
         print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f D(x): %.4f D(G(z)): %.4f / %.4f'
