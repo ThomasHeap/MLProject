@@ -30,10 +30,10 @@ export TMP=/disk/scratch/s1832582
 
 mkdir -p ${TMP}/datasets/
 export DATASET_DIR=${TMP}/datasets
-cp -r ~/paintings ${DATASET_DIR}
 # Activate the relevant virtual environment:
 
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
+python copy_images.py --data ~/mlpractical/cluster_experiments_scripts/train_info.csv --output ${DATASET_DIR}/paintings --image_loc ~/paintings --genre abstract
 python dcgan.py --dataset folder --dataroot ${DATASET_DIR}/paintings --cuda --outf ~/paintings_dcgan
 
