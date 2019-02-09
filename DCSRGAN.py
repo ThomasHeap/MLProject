@@ -246,6 +246,8 @@ for epoch in range(opt.niter):
         ###########################
         netG.zero_grad()
         y.fill_(real_label)  # fake labels are real for generator cost
+        noise = torch.randn(batch_size, nz, 1, 1, device=device)
+        fake = netG(noise)
         y_pred_fake = netD(fake)
         y_pred = netD(real_cpu)
           
