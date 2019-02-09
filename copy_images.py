@@ -28,5 +28,8 @@ with open(opt.data) as f:
             ids.append(filename)
 
 for i in ids:
-    shutil.copyfile('{0}/{1}'.format(opt.image_loc, i), '{0}'.format(opt.output))
-
+	#try:	
+    	#	shutil.copyfile('{0}/{1}'.format(opt.image_loc, i), '{0}'.format(opt.output))
+	#except:
+	#	print("couldn't find file!" + i)
+	shutil.copyfile('{0}/{1}'.format(opt.image_loc, i), '{0}/{1}'.format(opt.output, i))

@@ -131,16 +131,20 @@ if param.cuda:
 	cudnn.benchmark = True
 
 # To see images
-from IPython.display import Image
+#from IPython.display import Image
 to_img = transf.ToPILImage()
 
-import pytorch_visualize as pv
+from PIL import ImageFile, Image
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+Image.MAX_IMAGE_PIXELS = None
+
+#import pytorch_visualize as pv
 
 import math
 
 torch.utils.backcompat.broadcast_warning.enabled=True
 
-from fid import calculate_fid_given_paths as calc_fid
+#from fid import calculate_fid_given_paths as calc_fid
 #from inception import get_inception_score
 #from inception import load_images
 
