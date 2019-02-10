@@ -85,6 +85,7 @@ if param.loss_D == 7:
 if param.loss_D == 8:
 	title = 'RaHingeGAN_'
 
+print("STARTING")
 if param.seed is not None:
 	title = title + 'seed%i' % param.seed
 

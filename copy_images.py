@@ -1,5 +1,6 @@
 import argparse
 import shutil
+import os
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', required = True, help='')
 parser.add_argument('--image_loc', required = True)
@@ -9,6 +10,9 @@ parser.add_argument('--style', help='')
 opt = parser.parse_args()
 
 ids = []
+
+print(os.path.isdir(opt.image_loc))
+print(os.path.isdir(opt.output))
 
 with open(opt.data) as f:
     for line in f:
@@ -28,8 +32,5 @@ with open(opt.data) as f:
             ids.append(filename)
 
 for i in ids:
-	#try:	
-    	#	shutil.copyfile('{0}/{1}'.format(opt.image_loc, i), '{0}'.format(opt.output))
-	#except:
-	#	print("couldn't find file!" + i)
-	shutil.copyfile('{0}/{1}'.format(opt.image_loc, i), '{0}/{1}'.format(opt.output, i))
+    print(i)
+    shutil.copy('{0}/{1}'.format(opt.image_loc, i), '{0}'.format(opt.output))	
