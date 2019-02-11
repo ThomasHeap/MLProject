@@ -1,0 +1,37 @@
+Namespace(CIFAR10=False, CIFAR10_input_folder='/home/alexia/Datasets/CIFAR10', D_h_size=128, Diters=1, G_h_size=128, Giters=1, NN_conv=False, SELU=False, Tanh_GD=False, arch=0, batch_size=32, beta1=0.5, beta2=0.999, cuda=True, decay=0, extra_folder='/home/alexia/Output/Extra', gen_every=100000, gen_extra_images=0, grad_penalty=False, image_size=64, inception_folder='/home/alexia/Inception', input_folder='/disk/scratch/s1832582/datasets/paintings', load=None, loss_D=5, lr_D=0.0001, lr_G=0.0001, n_colors=3, n_gpu=4, n_iter=100000, no_batch_norm_D=False, no_batch_norm_G=False, output_folder='/home/s1832582/paintings_rsgan', penalty=10, print_every=1000, save=True, seed=None, show_graph=False, spectral=False, spectral_G=False, weight_decay=0, z_size=128)
+Random Seed: 6397
+Initialized weights
+DCGAN_G(
+  (main): Sequential(
+    (Start-ConvTranspose2d): ConvTranspose2d(128, 1024, kernel_size=(4, 4), stride=(1, 1), bias=False)
+    (Start-BatchNorm2d): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Start-ReLU): ReLU()
+    (Middle-ConvTranspose2d [1]): ConvTranspose2d(1024, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [1]): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [1]): ReLU()
+    (Middle-ConvTranspose2d [2]): ConvTranspose2d(512, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [2]): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [2]): ReLU()
+    (Middle-ConvTranspose2d [3]): ConvTranspose2d(256, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [3]): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [3]): ReLU()
+    (End-ConvTranspose2d): ConvTranspose2d(128, 3, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (End-Tanh): Tanh()
+  )
+)
+DCGAN_D(
+  (main): Sequential(
+    (Start-Conv2d): Conv2d(3, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Start-LeakyReLU): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [0]): Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [0]): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [0]): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [1]): Conv2d(256, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [1]): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [1]): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [2]): Conv2d(512, 1024, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [2]): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [2]): LeakyReLU(negative_slope=0.2, inplace)
+    (End-Conv2d): Conv2d(1024, 1, kernel_size=(4, 4), stride=(1, 1), bias=False)
+  )
+)
