@@ -770,7 +770,7 @@ for i in range(iter_offset, param.n_iter):
 		for ext in range(int(param.gen_extra_images/100)):
 			fake_test = G(Variable(z_extra.normal_(0, 1)))
 			for ext_i in range(100):
-				vutils.save_image((fake_test[ext_i].data*.50)+.50, '%s/%01d/fake_samples_%05d.png' % (param.extra_folder, current_set_images,ext_curr), normalize=False, padding=0)
+				vutils.save_image((fake_test[ext_i].data*.50)+.50, '%s/%01d/fake_samples_%05d.png' % (base_dir, current_set_images,ext_curr), normalize=False, padding=0)
 				ext_curr += 1
 		del z_extra
 		del fake_test
