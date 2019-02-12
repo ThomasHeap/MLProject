@@ -737,8 +737,8 @@ for i in range(iter_offset, param.n_iter):
 
 		# Save models
 		if param.save:
-			if not os.path.exists('%s/models/' % (param.extra_folder)):
-				os.mkdir('%s/models/' % (param.extra_folder))
+			if not os.path.exists('%s/models/' % (base_dir)):
+				os.mkdir('%s/models/' % (base_dir))
 			torch.save({
 				'i': i + 1,
 				'current_set_images': current_set_images,
@@ -749,18 +749,18 @@ for i in range(iter_offset, param.n_iter):
 				'G_scheduler': decayG.state_dict(),
 				'D_scheduler': decayD.state_dict(),
 				'z_test': z_test,
-			}, '%s/models/state_%02d.pth' % (param.extra_folder, current_set_images))
+			}, '%s/models/state_%02d.pth' % (base_dir, current_set_images))
 			s = 'Models saved'
 			print(s)
 			print(s, file=log_output)
 
 		# Delete previously existing images
-		if os.path.exists('%s/%01d/' % (param.extra_folder, current_set_images)):
-			for root, dirs, files in os.walk('%s/%01d/' % (param.extra_folder, current_set_images)):
+		if os.path.exists('%s/%01d/' % (base_dir, current_set_images)):
+			for root, dirs, files in os.walk('%s/%01d/' % (base_dir, current_set_images)):
 				for f in files:
 					os.unlink(os.path.join(root, f))
 		else:
-			os.mkdir('%s/%01d/' % (param.extra_folder, current_set_images))
+			os.mkdir('%s/%01d/' % (base_dir, current_set_images))
 
 		# Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
 		ext_curr = 0
