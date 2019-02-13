@@ -34,6 +34,6 @@ export DATASET_DIR=${TMP}/datasets
 
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
-python copy_images.py --data ~/mlpractical/cluster_experiment_scripts/train_info.csv --output ${DATASET_DIR}/paintings --image_loc ~/paintings/train --genre abstract
+python copy_images.py --data ~/mlpractical/cluster_experiment_scripts/train_info.csv --output ${DATASET_DIR}/paintings --image_loc ~/paintings/train --style Impressionism
 python dcgan.py --dataset folder --dataroot ${DATASET_DIR}/paintings --cuda --outf ~/paintings_dcgan
 
