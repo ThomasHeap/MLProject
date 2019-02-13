@@ -1,0 +1,94 @@
+Namespace(CIFAR10=False, CIFAR10_input_folder='/home/alexia/Datasets/CIFAR10', D_h_size=128, Diters=1, G_h_size=128, Giters=1, NN_conv=False, SELU=False, Tanh_GD=False, arch=0, batch_size=32, beta1=0.5, beta2=0.999, cuda=True, decay=0, extra_folder='/home/s1832582/paintings_rsgan/extraDC', gen_every=100000, gen_extra_images=50000, grad_penalty=False, image_size=128, inception_folder='/home/alexia/Inception', input_folder='/disk/scratch/s1832582', load=None, loss_D=1, lr_D=0.0001, lr_G=0.0001, n_colors=3, n_gpu=4, n_iter=50000, no_batch_norm_D=False, no_batch_norm_G=False, output_folder='/home/s1832582/paintings_rsgan', penalty=10, print_every=1000, save=True, seed=None, show_graph=False, spectral=False, spectral_G=False, weight_decay=0, z_size=128)
+Random Seed: 1173
+Initialized weights
+DCGAN_G(
+  (main): Sequential(
+    (Start-ConvTranspose2d): ConvTranspose2d(128, 2048, kernel_size=(4, 4), stride=(1, 1), bias=False)
+    (Start-BatchNorm2d): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Start-ReLU): ReLU()
+    (Middle-ConvTranspose2d [1]): ConvTranspose2d(2048, 1024, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [1]): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [1]): ReLU()
+    (Middle-ConvTranspose2d [2]): ConvTranspose2d(1024, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [2]): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [2]): ReLU()
+    (Middle-ConvTranspose2d [3]): ConvTranspose2d(512, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [3]): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [3]): ReLU()
+    (Middle-ConvTranspose2d [4]): ConvTranspose2d(256, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [4]): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-ReLU [4]): ReLU()
+    (End-ConvTranspose2d): ConvTranspose2d(128, 3, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (End-Tanh): Tanh()
+  )
+)
+DCGAN_D(
+  (main): Sequential(
+    (Start-Conv2d): Conv2d(3, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Start-LeakyReLU): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [0]): Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [0]): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [0]): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [1]): Conv2d(256, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [1]): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [1]): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [2]): Conv2d(512, 1024, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [2]): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [2]): LeakyReLU(negative_slope=0.2, inplace)
+    (Middle-Conv2d [3]): Conv2d(1024, 2048, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+    (Middle-BatchNorm2d [3]): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (Middle-LeakyReLU [3]): LeakyReLU(negative_slope=0.2, inplace)
+    (End-Conv2d): Conv2d(2048, 1, kernel_size=(4, 4), stride=(1, 1), bias=False)
+    (End-Sigmoid): Sigmoid()
+  )
+)
+[999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:2259.3541
+[1999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:4467.5398
+[2999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:6635.3596
+[3999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:8850.1658
+[4999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:10972.1690
+[5999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:13174.9663
+[6999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:15275.9264
+[7999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:17503.9369
+[8999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:19653.5923
+[9999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:21817.7906
+[10999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:24041.5599
+[11999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:26180.7550
+[12999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:28310.9055
+[13999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:30501.1286
+[14999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:32626.7259
+[15999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:34830.5704
+[16999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:36958.8317
+[17999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:39091.8747
+[18999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:41309.1920
+[19999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:43415.0243
+[20999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:45610.8891
+[21999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:47771.5086
+[22999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:49942.6419
+[23999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:52110.1652
+[24999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:54242.7944
+[25999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:56474.8130
+[26999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:58616.5963
+[27999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:60760.3779
+[28999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:62850.8899
+[29999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:64968.1905
+[30999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:67105.7342
+[31999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:69425.0036
+[32999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:71590.6737
+[33999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:73696.9993
+[34999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:75786.8361
+[35999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:77931.2343
+[36999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:80138.1439
+[37999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:82294.6910
+[38999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:84459.7726
+[39999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:86643.8418
+[40999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:88820.2988
+[41999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:91050.0714
+[42999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:93214.8447
+[43999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:95408.0126
+[44999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:97543.4405
+[45999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:99711.1946
+[46999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:101809.9733
+[47999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:103899.7013
+[48999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:106092.1558
+[49999] Diff: -27.6310 loss_D: 27.6310 loss_G: 0.0000 time:108184.9811
