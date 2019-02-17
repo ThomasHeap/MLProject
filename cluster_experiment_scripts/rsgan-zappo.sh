@@ -38,5 +38,5 @@ ls ${DATASET_DIR}/zappo
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
 #python copy_images.py --data ~/mlpractical/cluster_experiment_scripts/train_info.csv --output ${DATASET_DIR}/ --image_loc ~/paintings/train --style Impressionism
-python gan_loss_iter.py --image_size 128 --n_iter 51000 --input_folder ${DATASET_DIR}/zappo --output_folder ~/paintings_rsgan --n_gpu 4 --loss_D 5 --gen_every 50000 --extra_folder ~/paintings_rsgan/extraRS
+python gan_loss_iter.py --image_size 128 --n_iter 51000 --input_folder ${DATASET_DIR}/zappo --output_folder ~/paintings_rsgan --n_gpu 4 --loss_D 1 --gen_every 50000 --extra_folder ~/paintings_rsgan/extraRS
 
