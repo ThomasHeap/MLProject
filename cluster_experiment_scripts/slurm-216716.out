@@ -1,6 +1,0 @@
-usage: dcgan.py [-h] --dataset DATASET --dataroot DATAROOT [--workers WORKERS]
-                [--batchSize BATCHSIZE] [--imageSize IMAGESIZE] [--nz NZ]
-                [--ngf NGF] [--ndf NDF] [--niter NITER] [--lr LR]
-                [--beta1 BETA1] [--cuda] [--ngpu NGPU] [--netG NETG]
-                [--netD NETD] [--outf OUTF] [--manualSeed MANUALSEED]
-dcgan.py: error: unrecognized arguments: -ngpu 4

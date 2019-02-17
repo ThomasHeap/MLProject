@@ -1,10 +1,10 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=LongJobs
-#SBATCH --gres=gpu:4
+#SBATCH --partition=Standard
+#SBATCH --gres=gpu:1
 #SBATCH --mem=12000  # memory in Mb
-#SBATCH --time=3-08:00:00
+#SBATCH --time=0-08:00:00
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -35,5 +35,5 @@ export DATASET_DIR=${TMP}/datasets
 
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
-python fid_score.py "~/paintings_rsgan/GAN_-7/1" --gpu
+python fid_score.py "~/paintings_rsgan/GAN_-7/1" --gpu 0
 

@@ -1,5 +1,0 @@
-bash: SBATCH: command not found
-Traceback (most recent call last):
-  File "dcgan.py", line 18, in <module>
-    Image.MAX_IMAGE_PIXELS = sys.maxsize
-NameError: name 'sys' is not defined
