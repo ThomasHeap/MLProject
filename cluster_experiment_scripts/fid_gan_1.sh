@@ -35,5 +35,6 @@ export DATASET_DIR=${TMP}/datasets
 
 source /home/s1832582/miniconda3/bin/activate mlp
 cd ..
-python fid_score.py "~/paintings_rsgan/GAN_-7/1" --gpu 0
+python copy_images.py --data ~/mlpractical/cluster_experiment_scripts/train_info.csv --output ${DATASET_DIR}/ --image_loc ~/paintings/train --style Impressionism
+python fid_score.py ~/paintings_rsgan/GAN_-7/1 ${DATASET_DIR}/ --gpu 0
 
