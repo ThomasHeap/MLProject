@@ -11,7 +11,7 @@ from scipy.stats import entropy
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument('path', type=str, nargs=1,
+parser.add_argument('path', type=str,
                     help=('Path to the generated images or to .npz statistic files'))
 
 def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
