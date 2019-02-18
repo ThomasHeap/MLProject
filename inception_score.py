@@ -80,8 +80,11 @@ if __name__ == '__main__':
 
     import torchvision.datasets as dset
     import torchvision.transforms as transforms
-
-    cifar = dset.CIFAR10(root='~/paintings_rsgan/GAN_-7/1/', download=False,
+    
+    
+    
+    
+    cifar = dset.ImageFolder(root='~/paintings_rsgan/GAN_-7/1/',
                              transform=transforms.Compose([
                                  transforms.Scale(32),
                                  transforms.ToTensor(),
