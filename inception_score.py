@@ -8,6 +8,11 @@ from torchvision.models.inception import inception_v3
 
 import numpy as np
 from scipy.stats import entropy
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+parser.add_argument('path', type=str, nargs=1,
+                    help=('Path to the generated images or to .npz statistic files'))
 
 def inception_score(imgs, cuda=True, batch_size=32, resize=False, splits=1):
     """Computes the inception score of the generated images imgs
@@ -82,9 +87,7 @@ if __name__ == '__main__':
     import torchvision.transforms as transforms
     
     
-    
-    
-    cifar = dset.ImageFolder(root='~/paintings_rsgan/GAN_-7/1/',
+    cifar = dset.ImageFolder(root=args.path,
                              transform=transforms.Compose([
                                  transforms.Scale(32),
                                  transforms.ToTensor(),
