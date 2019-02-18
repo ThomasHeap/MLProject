@@ -86,6 +86,7 @@ if __name__ == '__main__':
     import torchvision.datasets as dset
     import torchvision.transforms as transforms
     
+    args = parser.parse_args()
     
     cifar = dset.ImageFolder(root=args.path,
                              transform=transforms.Compose([
