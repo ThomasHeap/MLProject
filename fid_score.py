@@ -92,7 +92,7 @@ def get_activations(images, model, batch_size=64, dims=2048,
     n_batches = d0 // batch_size
     n_used_imgs = n_batches * batch_size
 
-    dataloader = torch.utils.data.DataLoader(imgs, batch_size=batch_size)
+    dataloader = torch.utils.data.DataLoader(images, batch_size=batch_size)
     
     def get_pred(x):
       return F.softmax(x).data.cpu().numpy()
@@ -100,11 +100,24 @@ def get_activations(images, model, batch_size=64, dims=2048,
     pred_arr = np.empty((n_used_imgs, dims))
     
     for i, batch in enumerate(dataloader, 0):
-      batch = batch.type(dtype)
-      batchv = Variable(batch)
-      batch_size_i = batch.size()[0]
+       if verbose:
+            print('\rPropagating batch %d/%d' % (i + 1, n_batches),
+                  end='', flush=True)
+        start = i * batch_size
+        end = start + batch_size
 
-      preds[i*batch_size:i*batch_size + batch_size_i] = get_pred(batchv)
+        pred = model(batch)[0]
+
+        # If model output is not scalar, apply global spatial average pooling.
+        # This happens if you choose a dimensionality not equal 2048.
+        if pred.shape[2] != 1 or pred.shape[3] != 1:
+            pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
+
+        pred_arr[start:end] = pred.cpu().data.numpy().reshape(batch_size, -1)
+
+    if verbose:
+        print(' done')
+
       
     return pred_arr
 
