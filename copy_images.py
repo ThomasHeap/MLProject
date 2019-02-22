@@ -32,5 +32,4 @@ with open(opt.data) as f:
             ids.append(filename)
 
 for i in ids:
-    print(i)
     shutil.copy('{0}/{1}'.format(opt.image_loc, i), '{0}'.format(opt.output))	
