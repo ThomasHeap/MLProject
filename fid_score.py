@@ -71,6 +71,13 @@ def get_activations(images, model, batch_size=64, dims=2048,
        query tensor.
     """
     model.eval()
+    # Set up dtype
+    if cuda:
+        dtype = torch.cuda.FloatTensor
+    else:
+        if torch.cuda.is_available():
+            print("WARNING: You have a CUDA device, so you should probably set cuda=True")
+        dtype = torch.FloatTensor
 
     d0 = images.shape[0]
     if batch_size > d0:
@@ -81,31 +88,20 @@ def get_activations(images, model, batch_size=64, dims=2048,
     n_batches = d0 // batch_size
     n_used_imgs = n_batches * batch_size
 
+    dataloader = torch.utils.data.DataLoader(imgs, batch_size=batch_size)
+    
+    def get_pred(x):
+      return F.softmax(x).data.cpu().numpy()
+      
     pred_arr = np.empty((n_used_imgs, dims))
-    for i in range(n_batches):
-        if verbose:
-            print('\rPropagating batch %d/%d' % (i + 1, n_batches),
-                  end='', flush=True)
-        start = i * batch_size
-        end = start + batch_size
+    
+    for i, batch in enumerate(dataloader, 0):
+      batch = batch.type(dtype)
+      batchv = Variable(batch)
+      batch_size_i = batch.size()[0]
 
-        batch = torch.from_numpy(images[start:end]).type(torch.FloatTensor)
-        batch = Variable(batch, volatile=True)
-        if cuda:
-            batch = batch.cuda()
-
-        pred = model(batch)[0]
-
-        # If model output is not scalar, apply global spatial average pooling.
-        # This happens if you choose a dimensionality not equal 2048.
-        if pred.shape[2] != 1 or pred.shape[3] != 1:
-            pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
-
-        pred_arr[start:end] = pred.cpu().data.numpy().reshape(batch_size, -1)
-
-    if verbose:
-        print(' done')
-
+      preds[i*batch_size:i*batch_size + batch_size_i] = get_pred(batchv)
+      
     return pred_arr
 
 
