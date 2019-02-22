@@ -24,6 +24,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import os
+import sys
 import pathlib
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -35,6 +36,9 @@ from torch.autograd import Variable
 from torch.nn.functional import adaptive_avg_pool2d
 
 from inception import InceptionV3
+from PIL import ImageFile, Image
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+Image.MAX_IMAGE_PIXELS = sys.maxsize
 
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
@@ -52,7 +56,7 @@ parser.add_argument('-c', '--gpu', default='', type=str,
 
 
 def get_activations(images, model, batch_size=64, dims=2048,
-                    cuda=False, verbose=False):
+                    cuda=False, verbose=True):
     """Calculates the activations of the pool_3 layer for all images.
     Params:
     -- images      : Numpy array of dimension (n_images, 3, hi, wi). The values

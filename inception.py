@@ -134,9 +134,4 @@ class InceptionV3(nn.Module):
 
             if idx == self.last_needed_block:
                 break
-<<<<<<< HEAD
-
         return outp
-=======
-				return outp
->>>>>>> 6e4ba5225276ba83bd9dba926d2dd630a3101bfe
