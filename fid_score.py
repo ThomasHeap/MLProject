@@ -89,20 +89,22 @@ def get_activations(images, model, batch_size=64, dims=2048,
                'Setting batch size to data size'))
         batch_size = d0
 
+
     n_batches = d0 // batch_size
     n_used_imgs = n_batches * batch_size
 
     dataloader = torch.utils.data.DataLoader(images, batch_size=batch_size)
-    
+
     def get_pred(x):
       return F.softmax(x).data.cpu().numpy()
-      
+
     pred_arr = np.empty((n_used_imgs, dims))
-    
+
     for i, batch in enumerate(dataloader, 0):
-       if verbose:
+        if verbose:
             print('\rPropagating batch %d/%d' % (i + 1, n_batches),
                   end='', flush=True)
+
         start = i * batch_size
         end = start + batch_size
 
@@ -118,7 +120,7 @@ def get_activations(images, model, batch_size=64, dims=2048,
     if verbose:
         print(' done')
 
-      
+
     return pred_arr
 
 
@@ -132,10 +134,10 @@ def calculate_frechet_distance(mu1, sigma1, mu2, sigma2, eps=1e-6):
     -- mu1   : Numpy array containing the activations of a layer of the
                inception net (like returned by the function 'get_predictions')
                for generated samples.
-    -- mu2   : The sample mean over activations, precalculated on an 
+    -- mu2   : The sample mean over activations, precalculated on an
                representative data set.
     -- sigma1: The covariance matrix over activations for generated samples.
-    -- sigma2: The covariance matrix over activations, precalculated on an 
+    -- sigma2: The covariance matrix over activations, precalculated on an
                representative data set.
     Returns:
     --   : The Frechet Distance.
