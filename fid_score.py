@@ -112,7 +112,8 @@ def get_activations(images, model, batch_size=64, dims=2048,
         # This happens if you choose a dimensionality not equal 2048.
         if pred.shape[2] != 1 or pred.shape[3] != 1:
             pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
-
+        print(pred.cpu().data.numpy().shape)
+        print(pred.cpu().data.numpy().reshape(batch_size, -1).shape)
         pred_arr[start:end] = pred.cpu().data.numpy().reshape(batch_size, -1)
 
     if verbose:
