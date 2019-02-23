@@ -92,11 +92,8 @@ def get_activations(images, model, batch_size=64, dims=2048,
 
     n_batches = d0 // batch_size
     n_used_imgs = n_batches * batch_size
-
+    print(imgs.shape)
     dataloader = torch.utils.data.DataLoader(images, batch_size=batch_size)
-
-    def get_pred(x):
-      return F.softmax(x).data.cpu().numpy()
 
     pred_arr = np.empty((n_used_imgs, dims))
 
@@ -107,9 +104,9 @@ def get_activations(images, model, batch_size=64, dims=2048,
 
         start = i * batch_size
         end = start + batch_size
-
+        print(batch.shape)
         pred = model(batch.cuda())[0]
-
+        print(pred.shape)
         # If model output is not scalar, apply global spatial average pooling.
         # This happens if you choose a dimensionality not equal 2048.
         if pred.shape[2] != 1 or pred.shape[3] != 1:
