@@ -92,11 +92,12 @@ def get_activations(images, model, batch_size=64, dims=2048,
 
     n_batches = d0 // batch_size
     n_used_imgs = n_batches * batch_size
+    print(n_used_imgs)
     print(images.shape)
     dataloader = torch.utils.data.DataLoader(images, batch_size=batch_size)
 
     pred_arr = np.empty((n_used_imgs, dims))
-
+    print(pred_arr.shape)
     for i, batch in enumerate(dataloader, 0):
         if verbose:
             print('\rPropagating batch %d/%d' % (i + 1, n_batches),
