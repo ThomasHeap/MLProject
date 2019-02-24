@@ -222,7 +222,10 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
         f.close()
     else:
         path = pathlib.Path(path)
-        files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
+        try:
+            files = list(path.glob('*.jpg')) + list(path.glob('*.png'))[:10000]
+        except:
+            files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
         m, s = calculate_activation_statistics(files[:10000], model, batch_size,
                                                dims, cuda)
 
