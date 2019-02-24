@@ -40,6 +40,7 @@ import numpy as np
 import torch
 from scipy import linalg
 from scipy.misc import imread
+from skimage import transform
 import imageio
 from torch.nn.functional import adaptive_avg_pool2d
 
@@ -110,7 +111,7 @@ def get_activations(files, model, batch_size=50, dims=2048,
         start = i * batch_size
         end = start + batch_size
 
-        images = np.array([reshape(imageio.imread(str(f)), (128,128)).astype(np.float32)
+        images = np.array([transform.reshape(imageio.imread(str(f)), (128,128)).astype(np.float32)
                            for f in files[start:end]])
         print(images.shape)
          
