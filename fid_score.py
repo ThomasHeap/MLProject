@@ -43,6 +43,9 @@ from scipy.misc import imread
 from skimage import transform
 import imageio
 from torch.nn.functional import adaptive_avg_pool2d
+from PIL import ImageFile, Image
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+Image.MAX_IMAGE_PIXELS = sys.maxsize
 
 try:
     from tqdm import tqdm
