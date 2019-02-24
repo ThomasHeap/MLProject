@@ -96,8 +96,10 @@ def get_activations(files, model, batch_size=50, dims=2048,
         batch_size = len(files)
 
     n_batches = len(files) // batch_size
+    print(n_batches)
     n_used_imgs = n_batches * batch_size
-
+    print(n_used_imgs)
+      
     pred_arr = np.empty((n_used_imgs, dims))
 
     for i in tqdm(range(n_batches)):
