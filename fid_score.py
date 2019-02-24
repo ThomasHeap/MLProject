@@ -112,6 +112,7 @@ def get_activations(files, model, batch_size=50, dims=2048,
         images = np.array([imread(str(f)).astype(np.float32)
                            for f in files[start:end]])
         print(images.shape)
+        print(files[start:end])
 
         # Reshape to (n_images, 3, height, width)
         images = images.transpose((0, 3, 1, 2))
