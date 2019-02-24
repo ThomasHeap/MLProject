@@ -31,6 +31,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import torch
 import numpy as np
 from scipy.misc import imread
+import imageio
 from scipy import linalg
 from torch.autograd import Variable
 from torch.nn.functional import adaptive_avg_pool2d
@@ -210,9 +211,9 @@ def _compute_statistics_of_path(path, model, batch_size, dims, cuda):
         f.close()
     else:
         path = pathlib.Path(path)
-        files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
+        files = list(path.glob('*.jpg')) + list(path.glob('*.png'))[:10000]
 
-        imgs = np.array([imread(str(fn)).astype(np.float32) for fn in files])
+        imgs = np.array([imageio.imread(str(fn)).astype(np.float32) for fn in files])
 
         # Bring images to shape (B, 3, H, W)
         imgs = imgs.transpose((0, 3, 1, 2))
