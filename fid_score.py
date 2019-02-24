@@ -110,7 +110,7 @@ def get_activations(files, model, batch_size=50, dims=2048,
         start = i * batch_size
         end = start + batch_size
 
-        images = np.array([imageio.imread(str(f)).astype(np.float32)
+        images = np.array([reshape(imageio.imread(str(f)), (128,128)).astype(np.float32)
                            for f in files[start:end]])
         print(images.shape)
          
