@@ -39,7 +39,7 @@ trans = transforms.Compose([
 ])
 
 ## Importing dataset
-data = dataset.ImageFolder(root=args.input_folder, transform=trans)
+data = datasets.ImageFolder(root=args.input_folder, transform=trans)
 
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 train_loader = torch.utils.data.DataLoader(data,
