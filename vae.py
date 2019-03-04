@@ -8,6 +8,7 @@ from torchvision import datasets, transforms
 from torchvision.utils import save_image
 
 
+
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
 parser.add_argument('--image_size', type=int, default=64)
 parser.add_argument('--input_folder', default='/home/alexia/Datasets/Meow_64x64', help='input folder')
@@ -29,16 +30,16 @@ torch.manual_seed(args.seed)
 device = torch.device("cuda" if args.cuda else "cpu")
 
 ## Transforming images
-trans = transf.Compose([
-	transf.Resize((param.image_size, param.image_size)),
+trans = transforms.Compose([
+	transforms.Resize((param.image_size, param.image_size)),
 	# This makes it into [0,1]
-	transf.ToTensor(),
+	transforms.ToTensor(),
 	# This makes it into [-1,1]
-	transf.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+	transforms.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
 ])
 
 ## Importing dataset
-data = dset.ImageFolder(root=param.input_folder, transform=trans)
+data = dataset.ImageFolder(root=param.input_folder, transform=trans)
 
 kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 train_loader = torch.utils.data.DataLoader(data,
