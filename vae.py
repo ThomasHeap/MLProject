@@ -93,7 +93,9 @@ class VAE(nn.Module):
         return z, mu, logvar
 
     def encode(self, x):
+        print(x.shape)
         h = self.encoder(x)
+        print(h.shape)
         z, mu, logvar = self.bottleneck(h)
         return z, mu, logvar
 
