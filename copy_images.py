@@ -11,9 +11,6 @@ opt = parser.parse_args()
 
 ids = []
 
-print(os.path.isdir(opt.image_loc))
-print(os.path.isdir(opt.output))
-
 with open(opt.data) as f:
     for line in f:
         line = line.split(',')
