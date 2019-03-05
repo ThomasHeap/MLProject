@@ -84,9 +84,6 @@ class VAE(nn.Module):
         std = logvar.mul(0.5).exp_()
         # return torch.normal(mu, std)
         esp = torch.randn(*mu.size()).to(device)
-        print(mu.device)
-        print(std.device)
-        print(esp.device)
         z = mu + std * esp
         return z
 
@@ -163,7 +160,7 @@ if __name__ == "__main__":
     for epoch in range(1, args.epochs + 1):
         train(epoch)
         with torch.no_grad():
-            sample = torch.randn(args.batch_size, 1024)
+            sample = torch.randn(args.batch_size, 1024).to(device)
             compare_x = model.decoder(sample)
             compare_x = compare(compare_x)
             save_image(compare_x.data.cpu(), 'results/sample_' + str(epoch) + '.png')
