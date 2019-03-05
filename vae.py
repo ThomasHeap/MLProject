@@ -6,13 +6,13 @@ from torch import nn, optim
 from torch.nn import functional as F
 from torchvision import datasets, transforms
 from torchvision.utils import save_image
-
+from torch.utils.data.sampler import SubsetRandomSampler
 
 
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
 parser.add_argument('--image_size', type=int, default=64)
 parser.add_argument('--input_folder', default='/home/alexia/Datasets/Meow_64x64', help='input folder')
-parser.add_argument('--batch-size', type=int, default=128, metavar='N',
+parser.add_argument('--batch-size', type=int, default=32, metavar='N',
                     help='input batch size for training (default: 128)')
 parser.add_argument('--epochs', type=int, default=10, metavar='N',
                     help='number of epochs to train (default: 10)')
@@ -27,61 +27,97 @@ args.cuda = not args.no_cuda and torch.cuda.is_available()
 
 torch.manual_seed(args.seed)
 
-device = torch.device("cuda" if args.cuda else "cpu")
+# Device configuration
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-## Transforming images
-trans = transforms.Compose([
-	transforms.Resize((args.image_size, args.image_size)),
-	# This makes it into [0,1]
-	transforms.ToTensor(),
-	# This makes it into [-1,1]
-	transforms.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
-])
+# Load Data
+dataset = datasets.ImageFolder(root=args.input_folder, transform=transforms.Compose([
+    transforms.Resize((args.image_size, args.image_size)),
+    transforms.ToTensor(),
+]))
 
-## Importing dataset
-data = datasets.ImageFolder(root=args.input_folder, transform=trans)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+#train_indices = range(0,1000)
+#train_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, sampler=SubsetRandomSampler(train_indices))
 
-kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
-train_loader = torch.utils.data.DataLoader(data,
-    batch_size=args.batch_size, shuffle=True, **kwargs)
 
+class Flatten(nn.Module):
+    def forward(self, input):
+        return input.view(input.size(0), -1)
+
+class UnFlatten(nn.Module):
+    def forward(self, input, size=1024):
+        return input.view(input.size(0), size, 1, 1)
 
 class VAE(nn.Module):
-    def __init__(self):
+    def __init__(self, image_channels=3, h_dim=1024, z_dim=32):
         super(VAE, self).__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv2d(image_channels, 32, kernel_size=4, stride=2),
+            nn.ReLU(),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, kernel_size=4, stride=2),
+            nn.ReLU(),
+            nn.Conv2d(128, 256, kernel_size=4, stride=2),
+            nn.ReLU(),
+            Flatten()
+        )
 
-        self.fc1 = nn.Linear(args.image_size * args.image_size, 400)
-        self.fc21 = nn.Linear(400, 128)
-        self.fc22 = nn.Linear(400, 128)
-        self.fc3 = nn.Linear(128, 400)
-        self.fc4 = nn.Linear(400, args.image_size * args.image_size)
+        self.fc1 = nn.Linear(h_dim, z_dim)
+        self.fc2 = nn.Linear(h_dim, z_dim)
+        self.fc3 = nn.Linear(z_dim, h_dim)
 
-    def encode(self, x):
-        h1 = F.relu(self.fc1(x))
-        return self.fc21(h1), self.fc22(h1)
+        self.decoder = nn.Sequential(
+            UnFlatten(),
+            nn.ConvTranspose2d(h_dim, 128, kernel_size=5, stride=2),
+            nn.ReLU(),
+            nn.ConvTranspose2d(128, 64, kernel_size=5, stride=2),
+            nn.ReLU(),
+            nn.ConvTranspose2d(64, 32, kernel_size=6, stride=2),
+            nn.ReLU(),
+            nn.ConvTranspose2d(32, image_channels, kernel_size=6, stride=2),
+            nn.Sigmoid(),
+        )
 
     def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5*logvar)
-        eps = torch.randn_like(std)
-        return eps.mul(std).add_(mu)
+        std = logvar.mul(0.5).exp_()
+        # return torch.normal(mu, std)
+        esp = torch.randn(*mu.size())
+        z = mu + std * esp
+        return z
+
+    def bottleneck(self, h):
+        mu, logvar = self.fc1(h), self.fc2(h)
+        z = self.reparameterize(mu, logvar)
+        return z, mu, logvar
+
+    def encode(self, x):
+        h = self.encoder(x)
+        z, mu, logvar = self.bottleneck(h)
+        return z, mu, logvar
 
     def decode(self, z):
-        h3 = F.relu(self.fc3(z))
-        return torch.sigmoid(self.fc4(h3))
+        z = self.fc3(z)
+        z = self.decoder(z)
+        return z
 
     def forward(self, x):
-        mu, logvar = self.encode(x.view(-1, 784))
-        z = self.reparameterize(mu, logvar)
-        return self.decode(z), mu, logvar
+        z, mu, logvar = self.encode(x)
+        z = self.decode(z)
+        return z, mu, logvar
 
 
-model = VAE().to(device)
+
+image_channels = 3
+
+model = VAE(image_channels=image_channels).to(device)
+#model.load_state_dict(torch.load('results/vae.torch', map_location='cpu'))
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
-
 # Reconstruction + KL divergence losses summed over all elements and batch
-def loss_function(recon_x, x, mu, logvar):
-    BCE = F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')
+def loss_fn(recon_x, x, mu, logvar):
+    BCE = F.binary_cross_entropy(recon_x, x.view(-1, args.image_size * args.image_size), reduction='sum')
 
     # see Appendix B from VAE paper:
     # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
@@ -89,36 +125,44 @@ def loss_function(recon_x, x, mu, logvar):
     # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
 
-    return BCE + KLD
+    return BCE + KLD, BCE, KLD
 
 
 def train(epoch):
     model.train()
     train_loss = 0
-    for batch_idx, (data, _) in enumerate(train_loader):
+    for batch_idx, (data, _) in enumerate(dataloader):
         data = data.to(device)
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss = loss_function(recon_batch, data, mu, logvar)
+        loss, bce, kld = loss_fn(recon_batch, data, mu, logvar)
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
         if batch_idx % args.log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader),
+                epoch, batch_idx * len(data), len(dataloader.dataset),
+                100. * batch_idx / len(dataloader),
                 loss.item() / len(data)))
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
-          epoch, train_loss / len(train_loader.dataset)))
+          epoch, train_loss / len(dataset)))
 
+
+
+
+def compare(x):
+    recon_x, _, _ = model(x)
+    return torch.cat([x, recon_x])
 
 
 if __name__ == "__main__":
     for epoch in range(1, args.epochs + 1):
         train(epoch)
         with torch.no_grad():
-            sample = torch.randn(64, 128).to(device)
-            sample = model.decode(sample).cpu()
-            save_image(sample.view(64, 1, param.image_size, param.image_size),
-                       'results/sample_' + str(epoch) + '.png')
+            sample = torch.randn(args.batch_size, 1024)
+            compare_x = model.decoder(sample)
+            compare_x = compare(compare_x)
+            save_image(compare_x.data.cpu(), 'results/sample_' + str(epoch) + '.png')
+
+    torch.save(model.state_dict(), 'results/vae.torch')
