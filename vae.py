@@ -84,12 +84,14 @@ class VAE(nn.Module):
         std = logvar.mul(0.5).exp_()
         # return torch.normal(mu, std)
         esp = torch.randn(*mu.size())
+        print(mu.device)
+        print(std.device)
+        print(esp.device)
         z = mu + std * esp
         return z
 
     def bottleneck(self, h):
         mu, logvar = self.fc1(h), self.fc2(h)
-        print(h.shape)
         z = self.reparameterize(mu, logvar)
         return z, mu, logvar
 
