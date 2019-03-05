@@ -83,7 +83,7 @@ class VAE(nn.Module):
     def reparameterize(self, mu, logvar):
         std = logvar.mul(0.5).exp_()
         # return torch.normal(mu, std)
-        esp = torch.randn(*mu.size()).to(device)
+        esp = torch.randn(*mu.size(), device=device)
         z = mu + std * esp
         return z
 
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     for epoch in range(1, args.epochs + 1):
         train(epoch)
         with torch.no_grad():
-            sample = torch.randn(args.batch_size, 1024).to(device)
+            sample = torch.randn(args.batch_size, 1024, device)
             compare_x = model.decoder(sample)
             compare_x = compare(compare_x)
             save_image(compare_x.data.cpu(), 'results/sample_' + str(epoch) + '.png')
