@@ -50,11 +50,11 @@ class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(param.image_size * param.image_size, 400)
+        self.fc1 = nn.Linear(args.image_size * args.image_size, 400)
         self.fc21 = nn.Linear(400, 128)
         self.fc22 = nn.Linear(400, 128)
         self.fc3 = nn.Linear(128, 400)
-        self.fc4 = nn.Linear(400, param.image_size * param.image_size)
+        self.fc4 = nn.Linear(400, args.image_size * args.image_size)
 
     def encode(self, x):
         h1 = F.relu(self.fc1(x))
