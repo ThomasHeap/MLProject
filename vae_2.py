@@ -153,11 +153,12 @@ def train(epoch):
         epoch, train_loss / len(dataloader.dataset)))
     train_losses.append(train_loss / len(dataloader.dataset))
 
-
-for epoch in range(1, args.epochs + 1):
-    train(epoch)
-    test(epoch)
-    with torch.no_grad():
-        sample = torch.randn(64, 2048).to(device)
-        sample = model.decode(sample).cpu()
-        save_image(sample.view(64, 3, args.image_size, args.image_size), '../results/sample_' + str(epoch) + '.png')
+if __name__ == "__main__":
+    for epoch in range(1, args.epochs + 1):
+        train(epoch)
+        with torch.no_grad():
+            sample = torch.randn(64, 2048).to(device)
+            sample = model.decode(sample).cpu()
+            save_image(sample.view(64, 3, args.image_size, args.image_size), '../results/sample_' + str(epoch) + '.png')
+            
+    torch.save(model.state_dict(), 'results/vae.torch')        
