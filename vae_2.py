@@ -159,6 +159,6 @@ if __name__ == "__main__":
         with torch.no_grad():
             sample = torch.randn(64, 2048).to(device)
             sample = model.decode(sample).cpu()
-            save_image(sample.view(64, 3, args.image_size, args.image_size), '../results/sample_' + str(epoch) + '.png')
+            save_image(sample.view(64, 3, args.image_size, args.image_size), 'results/sample_' + str(epoch) + '.png')
             
     torch.save(model.state_dict(), 'results/vae.torch')        
