@@ -7,6 +7,9 @@ from torch.nn import functional as F
 from torchvision import datasets, transforms
 from torch.autograd import Variable
 from torchvision.utils import save_image
+from PIL import ImageFile, Image
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+Image.MAX_IMAGE_PIXELS = sys.maxsize
 
 
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
