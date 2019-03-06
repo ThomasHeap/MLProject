@@ -158,5 +158,5 @@ for epoch in range(1, epochs + 1):
     with torch.no_grad():
         sample = torch.randn(64, 2048).to(device)
         sample = model.decode(sample).cpu()
-        save_image(sample.view(64, 3, args.input_shape), args.input_shape),
+        save_image(sample.view(64, 3, args.image_size), args.image_size),
                    '../results/sample_' + str(epoch) + '.png')
