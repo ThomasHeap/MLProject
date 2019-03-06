@@ -1,6 +1,7 @@
+from __future__ import print_function
+import argparse
 import torch
 import os
-from skimage import io, transform
 from torch import nn, optim
 from torch.nn import functional as F
 from torchvision import datasets, transforms
@@ -23,7 +24,7 @@ parser.add_argument('--log-interval', type=int, default=10, metavar='N',
                     help='how many batches to wait before logging training status')
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
-kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
+kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 
 torch.manual_seed(args.seed)
 
@@ -40,6 +41,7 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, sh
 #train_indices = range(0,1000)
 #train_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, sampler=SubsetRandomSampler(train_indices))
 
+interDim = int(((args.image_size**2)/16)**0.5)
 
 class VAE_CNN(nn.Module):
     def __init__(self):
@@ -56,7 +58,7 @@ class VAE_CNN(nn.Module):
         self.bn4 = nn.BatchNorm2d(16)
 
         # Latent vectors mu and sigma
-        self.fc1 = nn.Linear(25 * 25 * 16, 2048)
+        self.fc1 = nn.Linear(interDim*interDim*16, 2048)
         self.fc_bn1 = nn.BatchNorm1d(2048)
         self.fc21 = nn.Linear(2048, 2048)
         self.fc22 = nn.Linear(2048, 2048)
@@ -64,8 +66,8 @@ class VAE_CNN(nn.Module):
         # Sampling vector
         self.fc3 = nn.Linear(2048, 2048)
         self.fc_bn3 = nn.BatchNorm1d(2048)
-        self.fc4 = nn.Linear(2048, 25 * 25 * 16)
-        self.fc_bn4 = nn.BatchNorm1d(25 * 25 * 16)
+        self.fc4 = nn.Linear(2048, interDim*interDim*16)
+        self.fc_bn4 = nn.BatchNorm1d(interDim*interDim*16)
 
         # Decoder
         self.conv5 = nn.ConvTranspose2d(16, 64, kernel_size=3, stride=2, padding=1, output_padding=1, bias=False)
@@ -82,7 +84,7 @@ class VAE_CNN(nn.Module):
         conv1 = self.relu(self.bn1(self.conv1(x)))
         conv2 = self.relu(self.bn2(self.conv2(conv1)))
         conv3 = self.relu(self.bn3(self.conv3(conv2)))
-        conv4 = self.relu(self.bn4(self.conv4(conv3))).view(-1, 25 * 25 * 16)
+        conv4 = self.relu(self.bn4(self.conv4(conv3))).view(-1, interDim*interDim*16)
 
         fc1 = self.relu(self.fc_bn1(self.fc1(conv4)))
 
@@ -101,12 +103,12 @@ class VAE_CNN(nn.Module):
 
     def decode(self, z):
         fc3 = self.relu(self.fc_bn3(self.fc3(z)))
-        fc4 = self.relu(self.fc_bn4(self.fc4(fc3))).view(-1, 16, 25, 25)
+        fc4 = self.relu(self.fc_bn4(self.fc4(fc3))).view(-1, 16, interDim, interDim)
 
         conv5 = self.relu(self.bn5(self.conv5(fc4)))
         conv6 = self.relu(self.bn6(self.conv6(conv5)))
         conv7 = self.relu(self.bn7(self.conv7(conv6)))
-        return self.conv8(conv7).view(-1, 3, 100, 100)
+        return self.conv8(conv7).view(-1, 3, args.image_size, args.image_size)
 
     def forward(self, x):
         mu, logvar = self.encode(x)
@@ -133,7 +135,7 @@ train_losses = []
 def train(epoch):
     model.train()
     train_loss = 0
-    for batch_idx, (data, _) in enumerate(train_loader_food):
+    for batch_idx, (data, _) in enumerate(dataloader):
         data = data.to(device)
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
@@ -141,22 +143,21 @@ def train(epoch):
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
-        if batch_idx % log_interval == 0:
+        if batch_idx % args.log_interval == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader_food.dataset),
-                       100. * batch_idx / len(train_loader_food),
+                epoch, batch_idx * len(data), len(dataloader.dataset),
+                       100. * batch_idx / len(dataloader),
                        loss.item() / len(data)))
 
     print('====> Epoch: {} Average loss: {:.4f}'.format(
-        epoch, train_loss / len(train_loader_food.dataset)))
-    train_losses.append(train_loss / len(train_loader_food.dataset))
+        epoch, train_loss / len(dataloader.dataset)))
+    train_losses.append(train_loss / len(dataloader.dataset))
 
 
-for epoch in range(1, epochs + 1):
+for epoch in range(1, args.epochs + 1):
     train(epoch)
     test(epoch)
     with torch.no_grad():
         sample = torch.randn(64, 2048).to(device)
         sample = model.decode(sample).cpu()
-        save_image(sample.view(64, 3, args.image_size), args.image_size),
-                   '../results/sample_' + str(epoch) + '.png')
+        save_image(sample.view(64, 3, args.image_size, args.image_size), '../results/sample_' + str(epoch) + '.png')
