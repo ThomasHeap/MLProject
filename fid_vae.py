@@ -36,7 +36,10 @@ import sys
 import os
 import pathlib
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
+from torch import nn, optim
+from torch.nn import functional as F
+from torchvision import datasets, transforms
+from torch.autograd import Variable
 import numpy as np
 import torch
 from scipy import linalg
@@ -61,8 +64,8 @@ parser.add_argument('path', type=str, nargs=2,
                           'to .npz statistic files'))
 parser.add_argument('--batch-size', type=int, default=50,
                     help='Batch size to use')
+parser.add_argument('--image-size', type=int, default=64)
 parser.add_argument('--dims', type=int, default=2048,
-                    choices=list(InceptionV3.BLOCK_INDEX_BY_DIM),
                     help=('Dimensionality of Inception features to use. '
                           'By default, uses pool3 features'))
 parser.add_argument('-c', '--gpu', default='', type=str,
@@ -125,12 +128,13 @@ def get_activations(files, model, batch_size=50, dims=2048,
         if cuda:
             batch = batch.cuda()
 
-        pred = model.encode(batch)[0]
+        pred = model.encode(batch)
 
         # If model output is not scalar, apply global spatial average pooling.
         # This happens if you choose a dimensionality not equal 2048.
-        if pred.shape[2] != 1 or pred.shape[3] != 1:
-            pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
+        print(pred.shape)
+        #if pred.shape[2] != 1 or pred.shape[3] != 1:
+        #    pred = adaptive_avg_pool2d(pred, output_size=(1, 1))
 
         pred_arr[start:end] = pred.cpu().data.numpy().reshape(batch_size, -1)
 
@@ -248,7 +252,7 @@ def calculate_fid_given_paths(paths, batch_size, cuda, dims):
         if not os.path.exists(p):
             raise RuntimeError('Invalid path: %s' % p)
 
-    model = VAE_CNN(*args, **kwargs)
+    model = VAE_CNN()
     model.load_state_dict(torch.load('results_zappo/vae.torch'))
 
     if cuda:
@@ -262,7 +266,7 @@ def calculate_fid_given_paths(paths, batch_size, cuda, dims):
 
     return fid_value
 
-interDim = int(((args.image_size**2)/16)**0.5)
+
 
 class VAE_CNN(nn.Module):
     def __init__(self):
@@ -316,9 +320,10 @@ class VAE_CNN(nn.Module):
 if __name__ == '__main__':
     args = parser.parse_args()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-
+    interDim = int(((args.image_size**2)/16)**0.5)
     fid_value = calculate_fid_given_paths(args.path,
                                           args.batch_size,
                                           args.gpu != '',
                                           args.dims)
     print('FID: ', fid_value)
+fid
