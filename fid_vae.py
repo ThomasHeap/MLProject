@@ -326,4 +326,4 @@ if __name__ == '__main__':
                                           args.gpu != '',
                                           args.dims)
     print('FID: ', fid_value)
-fid
+
