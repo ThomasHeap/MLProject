@@ -163,7 +163,7 @@ ext_curr = 0
 # setup optimizer
 optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
-for i in range(50000/100):
+for i in range(int(50000/100)):
     fixed_noise = torch.randn(100, nz, 1, 1, device=device)
     fake = netG(fixed_noise)
     for j in range(100):
