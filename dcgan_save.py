@@ -167,5 +167,5 @@ for i in range(int(50000/100)):
     fixed_noise = torch.randn(100, nz, 1, 1, device=device)
     fake = netG(fixed_noise)
     for j in range(100):
-        vutils.save_image(fake.detach()[j].data, '%s/%03d.png' % (ext_curr, epoch), normalize=True)
+        vutils.save_image(fake.detach()[j].data, '%s/%03d.png' % (opt.outf, ext_curr), normalize=True)
         ext_curr += 1
