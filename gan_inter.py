@@ -541,7 +541,7 @@ print(D)
 print(D, file=log_output)
 
 # Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
-z_extra = torch.FloatTensor(100, param.z_size, 1, 1)
+z_extra = torch.FloatTensor(1, param.z_size, 1, 1)
 if param.cuda:
 	z_extra = z_extra.cuda()
 
