@@ -550,7 +550,7 @@ for i in range(10):
 	fake_test_2 = z_extra.normal_(0, 1)
 	vec = fake_test_2 - fake_test_1
 	for ext_i in range(10):
-		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/Interpolation_%05d%07d.png' % (base_dir,ext_i,j), normalize=False, padding=0)
+		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/Interpolation_%05d%07d.png' % (base_dir,ext_i,i), normalize=False, padding=0)
 
 
 del z_extra
