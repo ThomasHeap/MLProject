@@ -161,27 +161,6 @@ torch.manual_seed(param.seed)
 if param.cuda:
 	torch.cuda.manual_seed_all(param.seed)
 
-## Transforming images
-trans = transf.Compose([
-	transf.Resize((param.image_size, param.image_size)),
-	# This makes it into [0,1]
-	transf.ToTensor(),
-	# This makes it into [-1,1]
-	transf.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
-])
-
-## Importing dataset
-data = dset.ImageFolder(root=param.input_folder, transform=trans)
-if param.CIFAR10:
-	data = dset.CIFAR10(root=param.CIFAR10_input_folder, train=True, download=True, transform=trans)
-
-# Loading data randomly
-def generate_random_sample():
-	while True:
-		random_indexes = numpy.random.choice(data.__len__(), size=param.batch_size, replace=False)
-		batch = [data[i][0] for i in random_indexes]
-		yield torch.stack(batch, 0)
-random_sample = generate_random_sample()
 
 ## Models
 
