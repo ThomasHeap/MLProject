@@ -36,7 +36,7 @@ def calculateDistance(i1, i2):
 
 bestImages = []
 worstImages = []
-for g in targetFiles:
+for g in targetFiles[0:10000]:
     targetImg = imageio.imread(str(g))
     distances = []
     for f in dataFiles:
