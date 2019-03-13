@@ -554,6 +554,6 @@ for i in range(10):
 
 
 del z_extra
-del fake_test
+
 # Later use this command to get FID of first set:
 # python fid.py "/home/alexia/Output/Extra/01" "/home/alexia/Datasets/fid_stats_cifar10_train.npz" -i "/home/alexia/Inception" --gpu "0"
