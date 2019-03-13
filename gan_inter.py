@@ -543,16 +543,20 @@ print(D, file=log_output)
 # Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
 
 
-for i in range(10):
-	z_extra = torch.FloatTensor(1, param.z_size, 1, 1)
+for i in range(1):
+	z_extra_1 = torch.FloatTensor(1, param.z_size, 1, 1)
 	if param.cuda:
-		z_extra = z_extra.cuda()
+		z_extra_1 = z_extra_1.cuda()
 		
-	fake_test_1 = z_extra.normal_(0, 1)
-	fake_test_2 = z_extra.normal_(0, 1)
+	z_extra_2 = torch.FloatTensor(1, param.z_size, 1, 1)
+	if param.cuda:
+		z_extra_2 = z_extra_1.cuda()
+		
+	fake_test_1 = z_extra_1.normal_(0, 1)
+	fake_test_2 = z_extra_2.normal_(0, 1)
 	vec = fake_test_2 - fake_test_1
 	for ext_i in range(100):
-		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/Interpolation_%05d%07d.png' % (base_dir,ext_i,i), normalize=False, padding=0)
+		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/Interpolation_%02d%02d.png' % (base_dir,i,ext_i), normalize=False, padding=0)
 	del z_extra
 
 
