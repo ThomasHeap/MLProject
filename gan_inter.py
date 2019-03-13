@@ -545,12 +545,12 @@ z_extra = torch.FloatTensor(100, param.z_size, 1, 1)
 if param.cuda:
 	z_extra = z_extra.cuda()
 
-
-fake_test_1 = G(Variable(z_extra.normal_(0, 1)))
-fake_test_2 = z_extra.normal_(0, 1)
-vec = fake_test_2 - fake_test_1
-for ext_i in range(10):
-	vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/%01d/Interpolation_%05d.png' % (base_dir, current_set_images,ext_i), normalize=False, padding=0)
+for i in range(10):
+	fake_test_1 = G(Variable(z_extra.normal_(0, 1)))
+	fake_test_2 = z_extra.normal_(0, 1)
+	vec = fake_test_2 - fake_test_1
+	for ext_i in range(10):
+		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/%01d/Interpolation_%05d%07d.png' % (base_dir, current_set_images,ext_i,j), normalize=False, padding=0)
 
 
 del z_extra
