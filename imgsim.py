@@ -41,7 +41,7 @@ for g in targetFiles:
     distances = []
     for f in dataFiles:
         dataImg = transform.resize(imageio.imread(str(f)), (128,128,3)).astype(np.float32)
-        distances.append([f, calculateDistances(targetImg, dataImg)])
+        distances.append([f, calculateDistance(targetImg, dataImg)])
 
     distances.sort(key=lambda x: x[1])
     bestImages.append([g, distances[:5]])
