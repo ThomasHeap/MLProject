@@ -546,7 +546,7 @@ if param.cuda:
 	z_extra = z_extra.cuda()
 
 for i in range(10):
-	fake_test_1 = G(Variable(z_extra.normal_(0, 1)))
+	fake_test_1 = z_extra.normal_(0, 1)
 	fake_test_2 = z_extra.normal_(0, 1)
 	vec = fake_test_2 - fake_test_1
 	for ext_i in range(10):
