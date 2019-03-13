@@ -541,19 +541,21 @@ print(D)
 print(D, file=log_output)
 
 # Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
-z_extra = torch.FloatTensor(1, param.z_size, 1, 1)
-if param.cuda:
-	z_extra = z_extra.cuda()
+
 
 for i in range(10):
+	z_extra = torch.FloatTensor(1, param.z_size, 1, 1)
+	if param.cuda:
+		z_extra = z_extra.cuda()
+		
 	fake_test_1 = z_extra.normal_(0, 1)
 	fake_test_2 = z_extra.normal_(0, 1)
 	vec = fake_test_2 - fake_test_1
-	for ext_i in range(10):
+	for ext_i in range(100):
 		vutils.save_image(G(Variable(fake_test_1 + ((ext_i/10) * vec))).data, '%s/Interpolation_%05d%07d.png' % (base_dir,ext_i,i), normalize=False, padding=0)
+	del z_extra
 
 
-del z_extra
 
 # Later use this command to get FID of first set:
 # python fid.py "/home/alexia/Output/Extra/01" "/home/alexia/Datasets/fid_stats_cifar10_train.npz" -i "/home/alexia/Inception" --gpu "0"
