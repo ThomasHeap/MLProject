@@ -44,7 +44,7 @@ for g in targetFiles:
         distances.append([f, calculateDistances(targetImg, dataImg)])
 
     distances.sort(key=lambda x: x[1])
-    bestImages.append([g, distances[:5])
+    bestImages.append([g, distances[:5]])
     worstImages.append([g, distances[-5:]])
 
 
