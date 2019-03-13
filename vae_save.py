@@ -14,8 +14,7 @@ Image.MAX_IMAGE_PIXELS = sys.maxsize
 
 
 parser = argparse.ArgumentParser(description='VAE MNIST Example')
-parser.add_argument('--image_size', type=int, default=64)
-parser.add_argument('--input_folder', default='/home/alexia/Datasets/Meow_64x64', help='input folder')
+parser.add_argument('--image_size', type=int, default=128)
 parser.add_argument('--batch-size', type=int, default=128, metavar='N',
                     help='input batch size for training (default: 128)')
 parser.add_argument('--epochs', type=int, default=10, metavar='N',
@@ -35,15 +34,6 @@ torch.manual_seed(args.seed)
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Load Data
-dataset = datasets.ImageFolder(root=args.input_folder, transform=transforms.Compose([
-    transforms.Resize((args.image_size, args.image_size)),
-    transforms.ToTensor(),
-]))
-
-dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
-#train_indices = range(0,1000)
-#train_loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, sampler=SubsetRandomSampler(train_indices))
 
 interDim = int(((args.image_size**2)/16)**0.5)
 
@@ -131,14 +121,17 @@ class customLoss(nn.Module):
         return loss_MSE + loss_KLD
 
 model = VAE_CNN().to(device)
-model.load_state_dict(torch.load('results/vae.torch'))
+model.load_state_dict(torch.load('results/vae.torch', map_location='cpu'))
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 loss_mse = customLoss()
 
 
 if __name__ == "__main__":
     with torch.no_grad():
-        for i in range(50000)
-            sample = torch.randn(2048).to(device)
+        ext_curr = 0
+        for i in range(int(50000/100)):
+            sample = torch.randn(100, 2048).to(device)
             sample = model.decode(sample).cpu()
-            save_image(sample.view(3, args.image_size, args.image_size), 'results/1/' str(i) + '.png')
+            for j in range(100):
+                save_image(sample[j].view(3, args.image_size, args.image_size), 'results/1/' + str(ext_curr) + '.png')
+                ext_curr += 1
