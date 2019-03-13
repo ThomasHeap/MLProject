@@ -550,7 +550,7 @@ for i in range(1):
 		
 	z_extra_2 = torch.FloatTensor(1, param.z_size, 1, 1)
 	if param.cuda:
-		z_extra_2 = z_extra_1.cuda()
+		z_extra_2 = z_extra_2.cuda()
 		
 	fake_test_1 = z_extra_1.normal_(0, 1)
 	fake_test_2 = z_extra_2.normal_(0, 1)
