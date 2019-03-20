@@ -161,27 +161,6 @@ torch.manual_seed(param.seed)
 if param.cuda:
 	torch.cuda.manual_seed_all(param.seed)
 
-## Transforming images
-trans = transf.Compose([
-	transf.Resize((param.image_size, param.image_size)),
-	# This makes it into [0,1]
-	transf.ToTensor(),
-	# This makes it into [-1,1]
-	transf.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
-])
-
-## Importing dataset
-data = dset.ImageFolder(root=param.input_folder, transform=trans)
-if param.CIFAR10:
-	data = dset.CIFAR10(root=param.CIFAR10_input_folder, train=True, download=True, transform=trans)
-
-# Loading data randomly
-def generate_random_sample():
-	while True:
-		random_indexes = numpy.random.choice(data.__len__(), size=param.batch_size, replace=False)
-		batch = [data[i][0] for i in random_indexes]
-		yield torch.stack(batch, 0)
-random_sample = generate_random_sample()
 
 ## Models
 
@@ -538,7 +517,7 @@ optimizerG = torch.optim.Adam(G.parameters(), lr=param.lr_G, betas=(param.beta1,
 decayD = torch.optim.lr_scheduler.ExponentialLR(optimizerD, gamma=1-param.decay)
 decayG = torch.optim.lr_scheduler.ExponentialLR(optimizerG, gamma=1-param.decay)
 
-# Load existing models
+#  existing models
 if param.load:
 	checkpoint = torch.load(param.load)
 	current_set_images = checkpoint['current_set_images']
@@ -561,218 +540,24 @@ print(G, file=log_output)
 print(D)
 print(D, file=log_output)
 
-## Fitting model
-for i in range(iter_offset, param.n_iter):
-
-	# Fake images saved
-	if i % param.print_every == 0:
-		fake_test = G(z_test)
-		vutils.save_image(fake_test.data, '%s/images/fake_samples_iter%05d.png' % (base_dir, i), normalize=True)
-
-	for p in D.parameters():
-		p.requires_grad = True
-
-	for t in range(param.Diters):
-
-		########################
-		# (1) Update D network #
-		########################
-
-		D.zero_grad()
-		images = random_sample.__next__()
-		# Mostly necessary for the last one because if N might not be a multiple of batch_size
-		current_batch_size = images.size(0)
-		if param.cuda:
-			images = images.cuda()
-		# Transfer batch of images to x
-		x.data.resize_as_(images).copy_(images)
-		del images
-		y_pred = D(x)
-
-		if param.show_graph and i == 0:
-			# Visualization of the autograd graph
-			d = pv.make_dot(y_pred, D.state_dict())
-			d.view()
-
-		if param.loss_D in [1,2,3,4]:
-			# Train with real data
-			y.data.resize_(current_batch_size).fill_(1)
-			if param.loss_D == 1:
-				errD_real = criterion(y_pred, y)
-			if param.loss_D == 2:
-				errD_real = torch.mean((y_pred - y) ** 2)
-				#a = torch.abs(y_pred - y)
-				#errD_real = torch.mean(a**(1+torch.log(1+a**4)))
-			if param.loss_D == 3:
-				errD_real = -torch.mean(y_pred)
-			if param.loss_D == 4:
-				errD_real = torch.mean(torch.nn.ReLU()(1.0 - y_pred))
-			errD_real.backward()
-
-			# Train with fake data
-			z.data.resize_(current_batch_size, param.z_size, 1, 1).normal_(0, 1)
-			fake = G(z)
-			x_fake.data.resize_(fake.data.size()).copy_(fake.data)
-			y.data.resize_(current_batch_size).fill_(0)
-			# Detach y_pred from the neural network G and put it inside D
-			y_pred_fake = D(x_fake.detach())
-			if param.loss_D == 1:
-				errD_fake = criterion(y_pred_fake, y)
-			if param.loss_D == 2:
-				errD_fake = torch.mean((y_pred_fake) ** 2)
-				#a = torch.abs(y_pred_fake - y)
-				#errD_fake = torch.mean(a**(1+torch.log(1+a**2)))
-			if param.loss_D == 3:
-				errD_fake = torch.mean(y_pred_fake)
-			if param.loss_D == 4:
-				errD_fake = torch.mean(torch.nn.ReLU()(1.0 + y_pred_fake))
-			errD_fake.backward()
-			errD = errD_real + errD_fake
-			#print(errD)
-		else:
-			y.data.resize_(current_batch_size).fill_(1)
-			y2.data.resize_(current_batch_size).fill_(0)
-			z.data.resize_(current_batch_size, param.z_size, 1, 1).normal_(0, 1)
-			fake = G(z)
-			x_fake.data.resize_(fake.data.size()).copy_(fake.data)
-			y_pred_fake = D(x_fake.detach())
-			if param.loss_D == 5:
-				errD = BCE_stable(y_pred - y_pred_fake, y)
-			if param.loss_D == 6:
-				errD = (BCE_stable(y_pred - torch.mean(y_pred_fake), y) + BCE_stable(y_pred_fake - torch.mean(y_pred), y2))/2
-			if param.loss_D == 7: # (y_hat-1)^2 + (y_hat+1)^2
-				errD = (torch.mean((y_pred - torch.mean(y_pred_fake) - y) ** 2) + torch.mean((y_pred_fake - torch.mean(y_pred) + y) ** 2))/2
-			if param.loss_D == 8:
-				errD = (torch.mean(torch.nn.ReLU()(1.0 - (y_pred - torch.mean(y_pred_fake)))) + torch.mean(torch.nn.ReLU()(1.0 + (y_pred_fake - torch.mean(y_pred)))))/2
-			errD_real = errD
-			errD_fake = errD
-			errD.backward()
-
-		if (param.loss_D in [3] or param.grad_penalty):
-			# Gradient penalty
-			u.data.resize_(current_batch_size, 1, 1, 1)
-			u.uniform_(0, 1)
-			x_both = x.data*u + x_fake.data*(1-u)
-			if param.cuda:
-				x_both = x_both.cuda()
-			# We only want the gradients with respect to x_both
-			x_both = Variable(x_both, requires_grad=True)
-			grad = torch.autograd.grad(outputs=D(x_both), inputs=x_both, grad_outputs=grad_outputs, retain_graph=True, create_graph=True, only_inputs=True)[0]
-			# We need to norm 3 times (over n_colors x image_size x image_size) to get only a vector of size "batch_size"
-			grad_penalty = param.penalty*((grad.norm(2, 1).norm(2,1).norm(2,1) - 1) ** 2).mean()
-			grad_penalty.backward()
-		optimizerD.step()
+# Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
+z_extra = torch.FloatTensor(100, param.z_size, 1, 1)
+if param.cuda:
+	z_extra = z_extra.cuda()
 
 
-	########################
-	# (2) Update G network #
-	########################
+fake_test_1 = z_extra.normal_(0, 1)
+fake_test_2 = z_extra.normal_(0, 1)
+fake_test_3 = z_extra.normal_(0, 1)
 
-	# Make it a tiny bit faster
-	for p in D.parameters():
-		p.requires_grad = False
+vec_1 = fake_test_2 - fake_test_1
+vec_2 = fake_test_2 - fake_test_3
+for i in range(8):
+	for j in range(8):
+		vutils.save_image(G(Variable(fake_test_1 + ((i/8) * vec_1) + ((j/8) * vec_2))).data, '%s/%01d/Interpolation_%05d.png' % (base_dir, current_set_images,ext_i), normalize=False, padding=0)
 
-	for t in range(param.Giters):
 
-		G.zero_grad()
-		y.data.resize_(current_batch_size).fill_(1)
-		z.data.resize_(current_batch_size, param.z_size, 1, 1).normal_(0, 1)
-		fake = G(z)
-		y_pred_fake = D(fake)
-
-		if param.loss_D not in [1, 2, 3, 4]:
-			images = random_sample.__next__()
-			current_batch_size = images.size(0)
-			if param.cuda:
-				images = images.cuda()
-			x.data.resize_as_(images).copy_(images)
-			del images
-
-		if (param.loss_D == 1):
-			errG = criterion(y_pred_fake, y)
-		if param.loss_D == 2:
-			errG = torch.mean((y_pred_fake - y) ** 2)
-		if param.loss_D == 3:
-			errG = -torch.mean(y_pred_fake)
-		if param.loss_D == 4:
-			errG = -torch.mean(y_pred_fake)
-		if param.loss_D == 5:
-			y_pred = D(x)
-			# Non-saturating
-			errG = BCE_stable(y_pred_fake - y_pred, y)
-		if param.loss_D == 6:
-			y_pred = D(x)
-			# Non-saturating
-			y2.data.resize_(current_batch_size).fill_(0)
-			errG = (BCE_stable(y_pred - torch.mean(y_pred_fake), y2) + BCE_stable(y_pred_fake - torch.mean(y_pred), y))/2
-		if param.loss_D == 7:
-			y_pred = D(x)
-			errG = (torch.mean((y_pred - torch.mean(y_pred_fake) + y) ** 2) + torch.mean((y_pred_fake - torch.mean(y_pred) - y) ** 2))/2
-		if param.loss_D == 8:
-			y_pred = D(x)
-			# Non-saturating
-			errG = (torch.mean(torch.nn.ReLU()(1.0 + (y_pred - torch.mean(y_pred_fake)))) + torch.mean(torch.nn.ReLU()(1.0 - (y_pred_fake - torch.mean(y_pred)))))/2
-		errG.backward()
-		D_G = y_pred_fake.data.mean()
-		optimizerG.step()
-	decayD.step()
-	decayG.step()
-
-	# Log results so we can see them in TensorBoard after
-	#log_value('Diff', -(errD.data.item()+errG.data.item()), i)
-	#log_value('errD', errD.data.item(), i)
-	#log_value('errG', errG.data.item(), i)
-
-	if (i+1) % param.print_every == 0:
-		end = time.time()
-		fmt = '[%d] Diff: %.4f loss_D: %.4f loss_G: %.4f time:%.4f'
-		s = fmt % (i, -errD.data.item()+errG.data.item(), errD.data.item(), errG.data.item(), end - start)
-		print(s)
-		print(s, file=log_output)
-
-	# Evaluation metrics
-	if (i+1) % param.gen_every == 0:
-
-		current_set_images += 1
-
-		# Save models
-		if param.save:
-			if not os.path.exists('%s/models/' % (base_dir)):
-				os.mkdir('%s/models/' % (base_dir))
-			torch.save({
-				'i': i + 1,
-				'current_set_images': current_set_images,
-				'G_state': G.state_dict(),
-				'D_state': D.state_dict(),
-				'G_optimizer': optimizerG.state_dict(),
-				'D_optimizer': optimizerD.state_dict(),
-				'G_scheduler': decayG.state_dict(),
-				'D_scheduler': decayD.state_dict(),
-				'z_test': z_test,
-			}, '%s/models/state_%02d.pth' % (base_dir, current_set_images))
-			s = 'Models saved'
-			print(s)
-			print(s, file=log_output)
-
-		# Delete previously existing images
-		if os.path.exists('%s/%01d/' % (base_dir, current_set_images)):
-			for root, dirs, files in os.walk('%s/%01d/' % (base_dir, current_set_images)):
-				for f in files:
-					os.unlink(os.path.join(root, f))
-		else:
-			os.mkdir('%s/%01d/' % (base_dir, current_set_images))
-
-		# Generate 50k images for FID/Inception to be calculated later (not on this script, since running both tensorflow and pytorch at the same time cause issues)
-		ext_curr = 0
-		z_extra = torch.FloatTensor(100, param.z_size, 1, 1)
-		if param.cuda:
-			z_extra = z_extra.cuda()
-		for ext in range(int(param.gen_extra_images/100)):
-			fake_test = G(Variable(z_extra.normal_(0, 1)))
-			for ext_i in range(100):
-				vutils.save_image((fake_test[ext_i].data*.50)+.50, '%s/%01d/fake_samples_%05d.png' % (base_dir, current_set_images,ext_curr), normalize=False, padding=0)
-				ext_curr += 1
-		del z_extra
-		del fake_test
-		# Later use this command to get FID of first set:
-		# python fid.py "/home/alexia/Output/Extra/01" "/home/alexia/Datasets/fid_stats_cifar10_train.npz" -i "/home/alexia/Inception" --gpu "0"
+del z_extra
+del fake_test
+# Later use this command to get FID of first set:
+# python fid.py "/home/alexia/Output/Extra/01" "/home/alexia/Datasets/fid_stats_cifar10_train.npz" -i "/home/alexia/Inception" --gpu "0"
