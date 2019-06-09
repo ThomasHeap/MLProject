@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Calculates the Frechet Inception Distance (FID) to evalulate GANs
+"""Calculates the Frechet Inception Distance VAE (FID-VAE) to evalulate GANs
 
 The FID metric calculates the distance between two distributions of images.
 Typically, we have summary statistics (mean & covariance matrix) of one
@@ -9,9 +9,8 @@ When run as a stand-alone program, it compares the distribution of
 images that are stored as PNG/JPEG at a specified location with a
 distribution given by summary statistics (in pickle format).
 
-The FID is calculated by assuming that X_1 and X_2 are the activations of
-the pool_3 layer of the inception net for generated samples and real world
-samples respectively.
+The FID-VAE is calculated by assuming that X_1 and X_2 are the generated 
+samples and real world samples, encoded by a CNN-VAE, respectively.
 
 See --help to see further details.
 
