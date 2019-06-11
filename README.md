@@ -1,4 +1,4 @@
-#MLProject
+# MLProject
 
 Collection of scripts and models used by Ryan Egan (https://github.com/Regan831) and I in our final Machine Learning Practical project "Evaluating Relativisitic Generative Adversarial Networks in Artwork and Shoe Generation".
 
