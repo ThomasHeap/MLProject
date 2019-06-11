@@ -4,10 +4,10 @@ Collection of scripts and models used by Ryan Egan (https://github.com/Regan831)
 
 The directory structure has been changed since these files were used, making everything work again and writing a file that can call all the other interesting scripts is on my to-do list.
 
-The RSGAN code is largely unchanged from https://github.com/AlexiaJM/RelativisticGAN\\
-The VAE code is based on https://github.com/sksq96/pytorch-vae\\
-The FID code is based on https://github.com/mseitzer/pytorch-fid\\
-The Inception Score code is based on https://github.com/sbarratt/inception-score-pytorch\\
+The RSGAN code is largely unchanged from https://github.com/AlexiaJM/RelativisticGAN  
+The VAE code is based on https://github.com/sksq96/pytorch-vae  
+The FID code is based on https://github.com/mseitzer/pytorch-fid  
+The Inception Score code is based on https://github.com/sbarratt/inception-score-pytorch  
 
 If anyone finds their code in here and I haven't mentioned it please let me know.
 
